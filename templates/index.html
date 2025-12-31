@@ -1,102 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>House Price Predictor</title>
+    <title>Real Estate Price & Rent Calculator</title>
     <style>
-        /* General Styles */
-        body {
+        * {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('https://images.unsplash.com/photo-1494526585095-c41746248156?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGluZGlhbiUyMGhvdXNlfGVufDB8fDB8fHww');
-            background-blend-mode: darken;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            flex-direction: row;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.214);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 600px;
-            margin: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-        .header {
-            background-color: #28a745;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            border-radius: 50px;
-            margin-bottom: 20px;
-        }
-
-        .btn-custom {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            margin-top: 2%;
-            padding: 12px;
-            font-size: 18px;
-            border-radius: 10px;
-            width: 100%;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .btn-custom:hover {
-            background-color: #218838;
-            transform: scale(1.02);
-        }
-
-        .btn-custom:active {
-            transform: scale(0.98);
-        }
-
-        .form-control, .form-select {
-            border-radius: 10px;
-            padding: 12px;
-            border: 1px solid #ced4da;
-            width: 100%;
-            margin-top: 1%;
             box-sizing: border-box;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .form-control:focus, .form-select:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 8px rgba(40, 167, 69, 0.3);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, rgb(2, 71, 87) 0%, #012a70 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(1, 20, 35, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
+            33% { transform: translateY(-200px) translateX(100px) rotate(120deg); }
+            66% { transform: translateY(-100px) translateX(-100px) rotate(240deg); }
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .tab-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: white;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        select option {
+            background: #004a5f;
+            color: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, rgb(130, 186, 47) 0%, #ffef0e 100%);
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #027461 0%, #5ba302 100%);
+            margin-top: 1rem;
         }
 
         .loading {
             display: none;
             text-align: center;
-            margin-top: 20px;
+            padding: 2rem;
         }
 
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #28a745;
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            margin: 0 auto 1rem;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
         }
 
         @keyframes spin {
@@ -104,129 +309,555 @@
             100% { transform: rotate(360deg); }
         }
 
-        .predicted-price {
-            background: linear-gradient(135deg, rgba(40, 167, 69, 0.9), rgba(32, 201, 151, 0.9));
-            color: #ffffff;
+        .result-box {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
             border-radius: 20px;
-            padding: 25px;
-            margin-top: 30px;
+            padding: 2rem;
             text-align: center;
+            margin-top: 2rem;
             opacity: 0;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-            transform: translateY(20px);
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: scale(0.9);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .predicted-price.show {
+        .result-box.show {
             opacity: 1;
-            transform: translateY(0);
+            transform: scale(1);
         }
 
-        .predicted-price h1 {
-            font-size: 48px;
-            font-weight: 700;
-            margin: 0;
-            text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
-            letter-spacing: 1px;
+        .result-price {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            margin: 1rem 0;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { text-shadow: 0 0 5px rgba(255,255,255,0.4); }
-            50% { text-shadow: 0 0 15px rgba(255,255,255,0.7); }
-            100% { text-shadow: 0 0 5px rgba(255,255,255,0.4); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
-        .form-label {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-value {
+            font-size: 2rem;
             font-weight: bold;
-            color: #ffffff;
-            display: block;
-            margin-bottom: 5px;
-            margin-top: 20px;
+            color: white;
+            margin: 0.5rem 0;
         }
 
-        .row {
-            display: flex;
-            gap: 20px;
-            margin-top: 10px;
-            margin-bottom: 20px;
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
         }
 
-        .row .col-md-6 {
-            flex: 1;
+        .info-box {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid rgba(76, 175, 80, 0.4);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: white;
+            font-size: 0.9rem;
         }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .result-price {
+                font-size: 2.5rem;
+            }
+
+            .tab-nav {
+                overflow-x: auto;
+            }
+
+            .main-container {
+                padding: 0 1rem;
+            }
+        }
+            footer {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    footer p {
+      font-size: 1.1em;
+      color: rgba(19, 19, 19, 0.8);
+      letter-spacing: 1px;
+    }
+
+    /* Footer Styles */
+    footer {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      z-index: 10;
+      padding: 60px 5%;
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer-about {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .footer-about h3 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      font-weight: 400;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .footer-about p {
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 1.1em;
+    }
+
+    .team-section h3 {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 40px;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      font-weight: 400;
+    }
+
+    .team-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      max-width: 1000px;
+      margin: 0 auto 60px;
+    }
+
+    .team-member {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      transition: all 0.4s ease;
+    }
+
+    .team-member:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .team-member h4 {
+      color: #fff;
+      margin-bottom: 15px;
+      font-weight: 500;
+      font-size: 1.3em;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .icon-link {
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-size: 0.95em;
+    }
+
+    .icon-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+    }
+
+    .footer-bottom {
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-note {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1em;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .footer-legal a:hover {
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .team-container {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-legal {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="header">House Price Predictor</div>
+    <div class="particles" id="particles"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">HOMELENS</div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('predictor')">
+                <span>Price Predictor</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('rent')">
+                <span>Rent Calculator</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('emi')">
+                <span>EMI Calculator</span>
+            </button>
+        </div>
+
+        <!-- Price Predictor Tab -->
+        <div id="predictor" class="tab-content active">
+            <div class="card">
+                <div class="card-header">Predict House Price</div>
+                <form id="predictionForm">
+                    <div class="form-group">
+                        <label>Select City:</label>
+                        <select id="city" name="city" required>
+                            {% for city in cities %}
+                            <option value="{{ city }}">{{ city }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Location:</label>
+                        <select id="location" name="location" required></select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>BHK:</label>
+                            <input type="number" id="bhk" name="bhk" placeholder="e.g., 3" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Bathrooms:</label>
+                            <input type="number" id="bath" name="bath" placeholder="e.g., 2" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Sq Ft:</label>
+                            <input type="number" id="sqft" name="sqft" placeholder="e.g., 1200" required min="1">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn">Predict Price</button>
+                </form>
+
+                <div class="loading" id="loadingIndicator">
+                    <div class="spinner"></div>
+                    <p style="color: white; font-size: 1.2rem;">Predicting your dream home price...</p>
+                </div>
+
+                <div class="result-box" id="predictedPriceContainer">
+                    <h2 style="color: rgba(255,255,255,0.9); margin-bottom: 1rem;">Estimated Price</h2>
+                    <div class="result-price" id="predicted_price">₹ 0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rent Calculator Tab -->
+        <div id="rent" class="tab-content">
+            <div class="card">
+                <div class="card-header">Rent Prediction Calculator</div>
+                <form id="rentPredictionForm">
+                    <div class="form-group">
+                        <label>Select City:</label>
+                        <select id="rent-city" name="city" required>
+                            {% for city in cities %}
+                            <option value="{{ city }}">{{ city }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Location:</label>
+                        <select id="rent-location" name="location" required></select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>BHK:</label>
+                            <input type="number" id="rent-bhk" name="bhk" placeholder="e.g., 3" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Bathrooms:</label>
+                            <input type="number" id="rent-bath" name="bath" placeholder="e.g., 2" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Sq Ft:</label>
+                            <input type="number" id="rent-sqft" name="sqft" placeholder="e.g., 1200" required min="1">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn">Calculate Rent</button>
+                </form>
+
+                <div class="info-box">
+                    <strong>How Rent is Calculated:</strong><br>
+                    Rent is estimated based on property value using standard rental yield formulas (2-3% annually). 
+                    The calculation considers city demand, property size (BHK), and market standards.
+                </div>
+
+                <div class="loading" id="rentLoadingIndicator">
+                    <div class="spinner"></div>
+                    <p style="color: white; font-size: 1.2rem;">Calculating expected rent...</p>
+                </div>
+
+                <div class="result-box" id="rentResultsContainer">
+                    <h2 style="color: rgba(255,255,255,0.9); margin-bottom: 1rem;">Rent Estimate</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Property Value</div>
+                            <div class="stat-value" id="rent-property-value">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Monthly Rent</div>
+                            <div class="stat-value" id="rent-monthly">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Annual Rent</div>
+                            <div class="stat-value" id="rent-annual">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Rental Yield</div>
+                            <div class="stat-value" id="rent-yield">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMI Calculator Tab -->
+        <div id="emi" class="tab-content">
+            <div class="card">
+                <div class="card-header">EMI Calculator</div>
+                <div class="form-group">
+                    <label>Property Price (in Lakhs):</label>
+                    <input type="number" id="emi-price" placeholder="e.g., 50" step="0.01">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Down Payment (%):</label>
+                        <input type="number" id="emi-down" value="20" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Interest Rate (% p.a.):</label>
+                        <input type="number" id="emi-rate" value="8.5" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Loan Tenure (Years):</label>
+                        <input type="number" id="emi-tenure" value="20" min="1">
+                    </div>
+                </div>
+                <button class="btn" onclick="calculateEMI()">Calculate EMI</button>
+
+                <div id="emiResults" class="result-box">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Monthly EMI</div>
+                            <div class="stat-value" id="emi-monthly">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Total Interest</div>
+                            <div class="stat-value" id="emi-interest">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Total Payment</div>
+                            <div class="stat-value" id="emi-total">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        <form id="predictionForm" method="post" accept-charset="utf-8">
-            <!-- City Selection -->
-            <div class="mb-3">
-                <label class="form-label">Select the City:</label>
-                <select class="form-select" id="city" name="city" required>
-                    {% for city in cities %}
-                    <option value="{{ city }}">{{ city }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+ <footer id="footer">
+    <div class="footer-content">
+      <!-- About Mind Pause
+      <div class="footer-about">
+        <h3>Mind Pause</h3>
+        <p>Your sanctuary for mental wellness. We provide tools and resources to help you find inner peace, track your emotional well-being, and cultivate mindfulness in your daily life.</p>
+      </div> -->
 
-            <!-- Location Selection -->
-            <div class="mb-3">
-                <label class="form-label">Select the Location:</label>
-                <select class="form-select" id="location" name="location" required>
-                    <!-- Filled dynamically by JS -->
-                </select>
+      <!-- Team Section -->
+      <div class="team-section">
+        <h3>Meet Our Team</h3>
+        <div class="team-container">
+          <div class="team-member">
+            <h4>Muskan Ostwal</h4>
+            <div class="contact-info">
+              <a href="mailto:ostwalmuskan@gmail.com" class="icon-link">
+                <img src="https://www.bing.com/th/id/OIP.IpB5yPUkCFHOzlmM-O7ncAHaFW?w=284&h=211&c=8&rs=1&qlt=90&r=0&o=6&dpr=1.3&pid=3.1&rm=2" alt="Email" class="icon"> ostwalmuskan@gmail.com
+              </a>
+              <a href="https://www.linkedin.com/in/muskan-ostwal-222862251/" class="icon-link">
+                <img src="https://www.bing.com/th/id/OIP.waOtRAV99hCXTCS_RvbK6QHaGp?w=220&h=211&c=8&rs=1&qlt=90&r=0&o=6&dpr=1.3&pid=3.1&rm=2" alt="LinkedIn" class="icon"> LinkedIn
+              </a>
             </div>
+          </div>
 
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Enter BHK:</label>
-                    <input type="number" class="form-control" placeholder="Enter BHK" id="bhk" name="bhk" required min="1">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Enter Number of Bathrooms:</label>
-                    <input type="number" class="form-control" placeholder="Enter Number of Bathrooms" id="bath" name="bath" required min="1">
-                </div>
+          <div class="team-member">
+            <h4>Mansi</h4>
+            <div class="contact-info">
+              <a href="mailto:mansigarg7276@gmail.com" class="icon-link">
+                <img src="https://www.bing.com/th/id/OIP.IpB5yPUkCFHOzlmM-O7ncAHaFW?w=284&h=211&c=8&rs=1&qlt=90&r=0&o=6&dpr=1.3&pid=3.1&rm=2" alt="Email" class="icon"> mansigarg7276@gmail.com
+              </a>
+              <a href="https://www.linkedin.com/in/mansi-8aa830302?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app " class="icon-link">
+                <img src="https://www.bing.com/th/id/OIP.waOtRAV99hCXTCS_RvbK6QHaGp?w=220&h=211&c=8&rs=1&qlt=90&r=0&o=6&dpr=1.3&pid=3.1&rm=2" alt="LinkedIn" class="icon"> LinkedIn
+              </a>
             </div>
+          </div>
 
-            <div class="mb-3">
-                <label class="form-label">Enter Total Square Feet:</label>
-                <input type="number" class="form-control" placeholder="Enter Square Feet" id="sqft" name="sqft" required min="1">
+          <div class="team-member">
+            <h4>Avinash Kumar</h4>
+            <div class="contact-info">
+              <a href="mailto:avipatna14@gmail.com" class="icon-link">
+                <img src="https://www.bing.com/th/id/OIP.IpB5yPUkCFHOzlmM-O7ncAHaFW?w=284&h=211&c=8&rs=1&qlt=90&r=0&o=6&dpr=1.3&pid=3.1&rm=2" alt="Email" class="icon"> avipatna14@gmail.com
+              </a>
+              <a href="https://www.linkedin.com/in/avinash-kumar-453a47214?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app " class="icon-link">
+                <img src="https://www.bing.com/th/id/OIP.waOtRAV99hCXTCS_RvbK6QHaGp?w=220&h=211&c=8&rs=1&qlt=90&r=0&o=6&dpr=1.3&pid=3.1&rm=2" alt="LinkedIn" class="icon"> LinkedIn
+              </a>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <button type="submit" class="btn btn-custom">Predict Price</button>
-        </form>
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <p class="footer-note">© 2025 House Price Prediction</p>
+        <div class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
     </div>
-
-    <div class="container mt-4">
-        <div class="header">Predicted Price</div>
-        <div class="loading" id="loadingIndicator">
-            <div class="spinner"></div>
-            <p>Predicting...</p>
-        </div>
-        <div class="predicted-price" id="predictedPriceContainer">
-            <h1 class="text-center" id="predicted_price">₹ 0</h1>
-        </div>
+  </footer>
     </div>
 
     <script>
-        // locations data passed from Flask
         var locations = {{ locations|tojson }};
 
-        // populate locations based on city
-        function updateLocations() {
-            var city = document.getElementById("city").value;
-            var locationSelect = document.getElementById("location");
-            locationSelect.innerHTML = "";
+        // Generate particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = Math.random() * 100 + 50 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            event.target.closest('.tab-btn').classList.add('active');
+        }
+
+        // Update locations
+        function updateLocations(citySelectId = 'city', locationSelectId = 'location') {
+            const city = document.getElementById(citySelectId).value;
+            const locationSelect = document.getElementById(locationSelectId);
+            locationSelect.innerHTML = '';
 
             if (locations[city]) {
-                locations[city].forEach(function(loc) {
-                    var option = document.createElement("option");
+                locations[city].forEach(loc => {
+                    const option = document.createElement('option');
                     option.value = loc;
                     option.text = loc;
                     locationSelect.appendChild(option);
@@ -234,37 +865,111 @@
             }
         }
 
-        // Initial population when page loads
-        document.addEventListener("DOMContentLoaded", updateLocations);
-        // Update when city changes
-        document.getElementById("city").addEventListener("change", updateLocations);
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateLocations();
+            updateLocations('rent-city', 'rent-location');
+        });
 
-        // Prediction AJAX
-        document.getElementById('predictionForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            var form = event.target;
-            var formData = new FormData(form);
+        document.getElementById('city').addEventListener('change', () => updateLocations());
+        document.getElementById('rent-city').addEventListener('change', () => updateLocations('rent-city', 'rent-location'));
+
+        // Price Prediction
+        document.getElementById('predictionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
 
             document.getElementById('loadingIndicator').style.display = 'block';
             document.getElementById('predictedPriceContainer').classList.remove('show');
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/predict', true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    document.getElementById('loadingIndicator').style.display = 'none';
-                    if (xhr.status === 200) {
-                        document.getElementById('predicted_price').innerHTML = "₹ " + xhr.responseText;
-                        document.getElementById('predictedPriceContainer').classList.add('show');
-                    } else {
-                        document.getElementById('predicted_price').innerHTML = "Error predicting price";
-                        document.getElementById('predictedPriceContainer').classList.add('show');
-                    }
-                }
-            };
-            xhr.send(formData);
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                const price = await response.text();
+                document.getElementById('predicted_price').textContent = '₹ ' + price;
+                document.getElementById('predictedPriceContainer').classList.add('show');
+            } catch (error) {
+                document.getElementById('predicted_price').textContent = 'Error predicting price';
+                document.getElementById('predictedPriceContainer').classList.add('show');
+            } finally {
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
         });
+
+        // Rent Prediction
+        document.getElementById('rentPredictionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            document.getElementById('rentLoadingIndicator').style.display = 'block';
+            document.getElementById('rentResultsContainer').classList.remove('show');
+
+            try {
+                const response = await fetch('/predict-rent', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                document.getElementById('rent-property-value').textContent = '₹ ' + data.price;
+                document.getElementById('rent-monthly').textContent = data.monthly_rent;
+                document.getElementById('rent-annual').textContent = data.annual_rent;
+                document.getElementById('rent-yield').textContent = data.rental_yield;
+
+                document.getElementById('rentResultsContainer').classList.add('show');
+            } catch (error) {
+                alert('Error calculating rent');
+            } finally {
+                document.getElementById('rentLoadingIndicator').style.display = 'none';
+            }
+        });
+
+        // EMI Calculator
+        async function calculateEMI() {
+            const price = document.getElementById('emi-price').value;
+            const downPayment = document.getElementById('emi-down').value;
+            const interestRate = document.getElementById('emi-rate').value;
+            const tenure = document.getElementById('emi-tenure').value;
+
+            if (!price) {
+                alert('Please enter property price');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/emi', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        price: parseFloat(price),
+                        downPayment: parseFloat(downPayment),
+                        interestRate: parseFloat(interestRate),
+                        tenure: parseInt(tenure)
+                    })
+                });
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                document.getElementById('emi-monthly').textContent = data.emi;
+                document.getElementById('emi-interest').textContent = data.total_interest;
+                document.getElementById('emi-total').textContent = data.total_payment;
+
+                document.getElementById('emiResults').classList.add('show');
+            } catch (error) {
+                alert('Error calculating EMI');
+            }
+        }
     </script>
 </body>
-
 </html>
