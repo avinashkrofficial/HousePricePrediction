@@ -7,53 +7,21 @@ import traceback
 
 app = Flask(__name__)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, "datasets")
-MODEL_DIR = os.path.join(BASE_DIR, "model")
+# ------------------------
+# Load Bengaluru dataset + model
+# ------------------------
+blr_data = pd.read_csv('datasets/Cleaned_Data.csv')
+blr_model = pickle.load(open('model/RidgeModel.pkl','rb'))
 
-try:
-    blr_data = pd.read_csv(os.path.join(DATA_DIR, "Cleaned_Data.csv"))
-    blr_model = pickle.load(open(os.path.join(MODEL_DIR, "RidgeModel.pkl"), "rb"))
-    print(" Bengaluru model loaded successfully")
-except Exception as e:
-    print(f" Error loading Bengaluru data: {e}")
-    blr_data, blr_model = None, None
+# ------------------------
+# Load Delhi dataset + model
+# ------------------------
+delhi_data = pd.read_csv('datasets/newdataset.csv')
+delhi_model = pickle.load(open('model/RidgeModel_d.pkl','rb'))
 
-try:
-    delhi_data = pd.read_csv(os.path.join(DATA_DIR, "newdataset.csv"))
-    delhi_model = pickle.load(open(os.path.join(MODEL_DIR, "RidgeModel_d.pkl"), "rb"))
-    print(" Delhi model loaded successfully")
-except Exception as e:
-    print(f"Error loading Delhi data: {e}")
-    delhi_data, delhi_model = None, None
-
-
-def calculate_rent_from_price(price_in_lakhs, bhk, city):
-    price_in_rupees = price_in_lakhs * 100000
-
-    base_yield = 0.025
-
-    city_multipliers = {
-        "Bengaluru": 1.0,
-        "Delhi": 1.1
-    }
-
-    bhk_multipliers = {
-        1: 1.2,
-        2: 1.1,
-        3: 1.0,
-        4: 0.95,
-    }
-
-    city_multiplier = city_multipliers.get(city, 1.0)
-    bhk_multiplier = bhk_multipliers.get(bhk, 1.0 if bhk <= 4 else 0.9)
-
-    annual_rent = price_in_rupees * base_yield * city_multiplier * bhk_multiplier
-    monthly_rent = annual_rent / 12
-
-    return monthly_rent
-
-
+# ------------------------
+# Home route
+# ------------------------
 @app.route('/')
 def index():
     cities = []
@@ -252,3 +220,4 @@ if __name__ == '__main__':
     print(f"Server running at: http://127.0.0.1:5000")
     print("=" * 50 + "\n")
     app.run(debug=True, port=5000)
+
